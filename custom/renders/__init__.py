@@ -1,0 +1,1 @@
+from .restaurant import render_restaurant_list, render_restaurant_edit
