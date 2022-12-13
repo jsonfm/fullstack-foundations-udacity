@@ -36,33 +36,47 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         try:
+            fields = {}
             content_type = self.headers.get_content_type()
             boundary = self.headers.get_boundary()
-            ctype, pdict = cgi.parse_header(content_type)
-            pdict["boundary"] = str.encode(boundary, "utf-8")
-            fields = {}
-            if ctype == 'multipart/form-data':
-                fields = cgi.parse_multipart(self.rfile, pdict)
-                fields = multipart_to_dict(fields)
+            print("boundary: ", boundary)
+            if boundary is not None:
+                ctype, pdict = cgi.parse_header(content_type)
+
+                pdict["boundary"] = str.encode(boundary, "utf-8")
+        
+                if ctype == 'multipart/form-data':
+                    fields = cgi.parse_multipart(self.rfile, pdict)
+                    fields = multipart_to_dict(fields)
 
             response = self.router.execute_callback("POST", self.path, response=fields)
             output = response.body
-            
-            if output is not None:
-                self.send_response(response.status)
-            else:
-                self.send_response(500)
-                output = "<html><body>Server Error :(</body></html>"
 
+            if output is None and response.status_code != 302:
+                response.status = 500
+                output = "<html></p>Error</p></html>"
+
+            self.send_response(response.status)
+            
             if response.status >= 200 and response.status < 300:
                 self.send_header("Content-Type", "text/html") 
                 self.wfile.write(bytes(output, "utf-8"))
 
             if response.status >= 300 and response.status < 400:
                 self.send_header("Location", response.location)
-                
+
+            if response.status >= 500:
+                self.send_header("Content-Type", "text/html") 
+                self.wfile.write(bytes(output, "utf-8"))
+
             self.end_headers()
 
+        except Exception as e:
+            print("e: ", e)
+    
+    def do_DELETE(self):
+        try:
+            print("holy")
         except Exception as e:
             print("e: ", e)
 

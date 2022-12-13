@@ -12,7 +12,13 @@ def render_restaurant_list(restaurants: list):
                     </h4>
                     <div class="col-4">
                         <a class="btn btn-success w-100 mb-2" href="/restaurant/edit/{restaurant.id}">Editar</a>
-                        <a class="btn btn-danger w-100" href="/restaurant/edit/{restaurant.id}">Eliminar</a>
+                        <form 
+                            method="POST"
+                            class="w-100 px-0 mx-0"  
+                            action="/restaurant/x/delete/{restaurant.id}"
+                        >
+                            <button type="submit" class="btn btn-danger w-100">Eliminar</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -29,11 +35,9 @@ def render_restaurant_edit(restaurant):
                     class="form-control" 
                     value="{restaurant.name}"
                 >
-                <div class="text-center">
                     <button class="btn btn-primary mt-4 mx-auto w-50">
                         Edit
                     </button>
-                </div>
             </form>
         </div>
     """

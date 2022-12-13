@@ -32,8 +32,18 @@ def restaurant_create_view():
 
 @server.post("/restaurants/create/")
 def create_restaurant(response):
-    print("creating a restaurant: ", response, type(response))
+    new_restaurant = Restaurant(name=response["name"])
+    session.add(new_restaurant)
+    session.commit()
     return redirect("/")
+
+@server.post("/restaurant/x/delete/:id")
+def delete_restaurant(id: str = None, response = {}):
+    restaurant = session.query(Restaurant).filter_by(id=id).one()
+    session.delete(restaurant)
+    session.commit()
+    return redirect("/")
+
 
 # Running the server
 server.run()
