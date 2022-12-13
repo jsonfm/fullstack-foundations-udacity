@@ -56,12 +56,15 @@ class Router:
             kwargs[varname] = traces[index]
         return kwargs
 
-    def execute_callback(self, method: str, path: str):
+    def execute_callback(self, method: str, path: str, **others):
         """Executes a callback with a certain method on certain url."""
         callback, ckwargs = self.get_callback(method, path)
         if callback is not None:
             kwargs = self.get_kwargs_values(path, ckwargs)
             if len(kwargs) < 1:
-                return callback()
+                if len(others) < 1:
+                    return callback()
+                else:
+                    return callback(**others)
             else:
                 return callback(**kwargs)

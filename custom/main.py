@@ -1,4 +1,4 @@
-from server import Server, render_template
+from server import Server, render_template, redirect
 from db.models import Restaurant, MenuItem
 from db import session
 from renders import render_restaurant_list, render_restaurant_edit
@@ -9,6 +9,7 @@ server = Server(
     port=3000, 
     templates_folder="./templates",
 )
+
 
 @server.get("/")
 def home():
@@ -23,6 +24,16 @@ def restaurants(id: str = None):
     html = render_restaurant_edit(restaurant)
     return render_template("restaurant_edit.html", restaurant=html)
 
+
+@server.get("/restaurants/create")
+def restaurant_create_view():
+    return render_template("restaurant_create.html")
+
+
+@server.post("/restaurants/create/")
+def create_restaurant(response):
+    print("creating a restaurant: ", response, type(response))
+    return redirect("/")
 
 # Running the server
 server.run()

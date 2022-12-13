@@ -20,6 +20,13 @@ class Server:
             return callback
         return wrapper
 
+    def post(self, path, *args, **kwargs):
+        """Establishes a callback for reponse to a POST request."""
+        def wrapper(callback):
+            self._httpserver.router.add(method="POST", path=path, callback=callback)
+            return callback
+        return wrapper
+
     def run(self):
         """Executes the server on a blocking thread"""
         print(f"server running on http://{self.host}:{str(self.port)}")
