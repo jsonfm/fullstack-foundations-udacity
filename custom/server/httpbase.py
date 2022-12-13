@@ -3,7 +3,6 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from .router import Router
 
 
-
 class RequestHandler(BaseHTTPRequestHandler):
     def __init__(self, router,  *args, **kwargs):
         self.router = router

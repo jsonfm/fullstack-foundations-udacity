@@ -2,22 +2,11 @@ class Router:
     def __init__(self, *args, **kwargs):
         self.routes = {}
 
-    def add_get(self, path: str, callback):
-        self.routes["GET"] = {
-            path: callback
-        }
-
-    def get_post(self, path: str, callback):
-        self.routes["POST"] = {
-            path: callback
-        }
-    
     def add(self, method: str = "GET", path: str ="", callback = None):
-        routes = self.routes.get("GET", None)
+        routes = self.routes.get(method, None)
         if routes is None:
             self.routes[method] = {}
         self.routes[method][path] = callback
-
     
     def get_callback(self, method: str, path: str):
         routes = self.routes.get(method, None)
